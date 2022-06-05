@@ -10,7 +10,6 @@ var check_list_no_utilidades = [];
 
 next_click.forEach(function (next_click_form) {
     next_click_form.addEventListener("click", function () {
-        console.log(formnumber);
         if (!validateform()) {
             return false;
         }
@@ -74,34 +73,28 @@ function validateform() {
 
     if (bNoAcepto) {
         if ($('input[name="radioDefault"]').is(":checked")) {
-            console.log("radioDefault correcto");
             $("#msg_radioDefault").html("");
             $("#msg_radioDefault").addClass("d-none");
         } else {
             validate = false;
-            console.log("Selecciona radioDefault");
             $("#msg_radioDefault").html("Selecciona una opción");
             $("#msg_radioDefault").removeClass("d-none");
         }
 
         if ($('input[name="radioNumEmpleados"]').is(":checked")) {
-            console.log("radioNumEmpleados correcto");
             $("#msg_num_emp").html("");
             $("#msg_num_emp").addClass("d-none");
         } else {
             validate = false;
-            console.log("Selecciona radioNumEmpleados");
             $("#msg_num_emp").html("Selecciona una opción");
             $("#msg_num_emp").removeClass("d-none");
         }
 
         if ($('input[name="radioUtilidades"]').is(":checked")) {
-            console.log("radioUtilidades correcto");
             $("#msg_radio_utilidades").html("");
             $("#msg_radio_utilidades").addClass("d-none");
         } else {
             validate = false;
-            console.log("Selecciona radioUtilidades");
             $("#msg_radio_utilidades").html("Selecciona una opción");
             $("#msg_radio_utilidades").removeClass("d-none");
         }
@@ -109,7 +102,6 @@ function validateform() {
         var resultSector = $('input[name="sector_empresa"]:checked');
         if (resultSector.length <= 0) {
             validate = false;
-            console.log("sector_empresa requerid");
             $("#msg_sector_empresa").html("Selecciona al menos una opción");
             $("#msg_sector_empresa").removeClass("d-none");
         } else {
@@ -117,15 +109,12 @@ function validateform() {
             $("#msg_sector_empresa").addClass("d-none");
         }
 
-        console.log("formnumber", formnumber);
         if (formnumber == 1) {
             if ($('input[name="radioMonto"]').is(":checked")) {
-                console.log("radioMonto correcto");
                 $("#msg_monto_ptu").html("");
                 $("#msg_monto_ptu").addClass("d-none");
             } else {
                 validate = false;
-                console.log("Selecciona el monto repartido de PTU");
                 $("#msg_monto_ptu").html("Selecciona una opción");
                 $("#msg_monto_ptu").removeClass("d-none");
             }
@@ -133,23 +122,19 @@ function validateform() {
             var chekRMonto = $("#radioMonto2").is(":checked");
             if (divSection2_show == 1 && !chekRMonto) {
                 if ($('input[name="ckeckUtilidadMayor"]').is(":checked")) {
-                    console.log("ckeckUtilidadMayor correcto");
                     $("#msg_utilidades_mayor").html("");
                     $("#msg_utilidades_mayor").addClass("d-none");
                 } else {
                     validate = false;
-                    console.log("Selecciona ckeckUtilidadMayor");
                     $("#msg_utilidades_mayor").html("Selecciona una opción");
                     $("#msg_utilidades_mayor").removeClass("d-none");
                 }
             } else if (divSection2_show == 2) {
                 if ($('input[name="ckeckMenorUtilidades"]').is(":checked")) {
-                    console.log("ckeckMenorUtilidades correcto");
                     $("#msg_utilidades_menor").html("");
                     $("#msg_utilidades_menor").addClass("d-none");
                 } else {
                     validate = false;
-                    console.log("Selecciona ckeckMenorUtilidades");
                     $("#msg_utilidades_menor").html("Selecciona una opción");
                     $("#msg_utilidades_menor").removeClass("d-none");
                 }
@@ -164,20 +149,17 @@ $(document).ready(function () {
     var base_url = $("#base_url").val();
 
     $("#radioMonto1").change(function () {
-        console.log("radioMonto1");
         divSection2_show = 1;
         $("#divSec2_one").removeClass("d-none");
         $("#divSec2_two").addClass("d-none");
     });
 
     $("#radioMonto2").change(function () {
-        console.log("radioMonto2");
         $("#divSec2_one").addClass("d-none");
         $("#divSec2_two").addClass("d-none");
     });
 
     $("#radioMonto3").change(function () {
-        console.log("radioMonto3");
         divSection2_show = 2;
         $("#divSec2_two").removeClass("d-none");
         $("#divSec2_one").addClass("d-none");
@@ -185,7 +167,6 @@ $(document).ready(function () {
 
     $("#btn_enviar").off("click");
     $("#btn_enviar").on("click", function () {
-        console.log("enviar form...");
         var username = document.querySelector("#user_name");
         var shownname = document.querySelector(".shown_name");
         var empresa = document.querySelector("#empresa");
@@ -209,7 +190,6 @@ $(document).ready(function () {
             check_list_no_utilidades.push($(this).val());
         });
         check_list_no_utilidades.join(", ");
-        console.log(check_list_no_utilidades);
         var radioAnioAnt1 = $('input[name="radioanio_anterior"]:checked').val();
 
         var data = {
@@ -226,7 +206,7 @@ $(document).ready(function () {
             ckeckNoHuboUtilidades: check_list_no_utilidades,
             anio_anterior_ptu: radioAnioAnt1,
         };
-        console.log(data);
+
         var laravelToken = document
             .querySelector('meta[name="csrf-token"]')
             .getAttribute("content");
@@ -234,17 +214,9 @@ $(document).ready(function () {
         axios
             .post("/sendEncuesta", data)
             .then(function (response) {
-                console.log(response);
-                console.log("status:", response.status);
                 if (response.status == 200) {
                     console.log("Mostrar mensaje éxito...");
                     //toastr.success("Mensaje enviado!");
-                    /* $("#suscribete").val("");
-                    $("#nombre").val("");
-                    $("#correo").val("");
-                    $("#telefono").val("");
-                    $("#proyecto").val(0);
-                    $("#mensaje").val(""); */
                 } else {
                     console.log("Error mensaje");
                     //toastr.warning("El mensaje no pudo enviarse.");
