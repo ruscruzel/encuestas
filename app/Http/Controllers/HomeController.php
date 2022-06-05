@@ -36,7 +36,7 @@ class HomeController extends Controller
         $encuesta->monto_ptu = (!empty($request->radioMonto)) ? $request->radioMonto : ''; ;
         $encuesta->utilidades_mayor = $list_mayor;
         $encuesta->utilidades_menor = $list_menor;
-        $encuesta->dias_salario_estimado = $request->dias_de_salario;
+        $encuesta->dias_salario_estimado = (!empty($request->dias_de_salario)) ? $request->dias_de_salario : '';
         $encuesta->razones_no_utilidades = $list_no_utilidades;
         $encuesta->anio_anterior_ptu = $request->anio_anterior_ptu;
         $encuesta->save();
