@@ -33,7 +33,7 @@ class HomeController extends Controller
         $encuesta->sector_empresa = $request->sectorEmpresa;
         $encuesta->numero_empleados = $request->radioNumEmpleados;
         $encuesta->reparto_utilidades = $request->radioUtilidades;
-        $encuesta->monto_ptu = $request->radioMonto;
+        $encuesta->monto_ptu = (!empty($request->radioMonto)) ? $request->radioMonto : ''; ;
         $encuesta->utilidades_mayor = $list_mayor;
         $encuesta->utilidades_menor = $list_menor;
         $encuesta->dias_salario_estimado = $request->dias_de_salario;
