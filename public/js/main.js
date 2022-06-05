@@ -4,7 +4,9 @@ var step_list = document.querySelectorAll(".progress-bar li");
 var num = document.querySelector(".step-number");
 let formnumber = 0;
 var divSection2_show = 0;
-var list_sector_empresa = [];
+var check_list_utilidades_mayor = [];
+var check_list_utilidades_menor = [];
+var check_list_no_utilidades = [];
 
 next_click.forEach(function (next_click_form) {
     next_click_form.addEventListener("click", function () {
@@ -128,7 +130,8 @@ function validateform() {
                 $("#msg_monto_ptu").removeClass("d-none");
             }
 
-            if (divSection2_show == 1) {
+            var chekRMonto = $("#radioMonto2").is(":checked");
+            if (divSection2_show == 1 && !chekRMonto) {
                 if ($('input[name="ckeckUtilidadMayor"]').is(":checked")) {
                     console.log("ckeckUtilidadMayor correcto");
                     $("#msg_utilidades_mayor").html("");
@@ -155,14 +158,6 @@ function validateform() {
     }
 
     return validate;
-}
-
-function recupera_valores() {
-    $.each($("input[name='sector_empresa']:checked"), function () {
-        list_sector_empresa.push($(this).val());
-        console.log($(this).val());
-    });
-    list_sector_empresa.join(", ");
 }
 
 $(document).ready(function () {
@@ -200,6 +195,22 @@ $(document).ready(function () {
             'input[name="radioNumEmpleados"]:checked'
         ).val();
         var radioUtilidades = $('input[name="radioUtilidades"]:checked').val();
+        var radioMonto = $('input[name="radioMonto"]:checked').val();
+        $.each($("input[name='ckeckUtilidadMayor']:checked"), function () {
+            check_list_utilidades_mayor.push($(this).val());
+        });
+        check_list_utilidades_mayor.join(", ");
+        $.each($("input[name='ckeckMenorUtilidades']:checked"), function () {
+            check_list_utilidades_menor.push($(this).val());
+        });
+        check_list_utilidades_menor.join(", ");
+        var dias_de_salario = $("#dias_de_salario").val();
+        $.each($("input[name='ckeckNoHuboUtilidades']:checked"), function () {
+            check_list_no_utilidades.push($(this).val());
+        });
+        check_list_no_utilidades.join(", ");
+        console.log(check_list_no_utilidades);
+        var radioAnioAnt1 = $('input[name="radioanio_anterior"]:checked').val();
 
         var data = {
             nombre: username.value,
@@ -208,8 +219,41 @@ $(document).ready(function () {
             sectorEmpresa: sectorEmpresa,
             radioNumEmpleados: radioNumEmpleados,
             radioUtilidades: radioUtilidades,
+            radioMonto: radioMonto,
+            ckeckUtilidadMayor: check_list_utilidades_mayor,
+            ckeckMenorUtilidades: check_list_utilidades_menor,
+            dias_de_salario: dias_de_salario,
+            ckeckNoHuboUtilidades: check_list_no_utilidades,
+            anio_anterior_ptu: radioAnioAnt1,
         };
         console.log(data);
+        var laravelToken = document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content");
+
+        axios
+            .post("/sendEncuesta", data)
+            .then(function (response) {
+                console.log(response);
+                console.log("status:", response.status);
+                if (response.status == 200) {
+                    console.log("Mostrar mensaje éxito...");
+                    //toastr.success("Mensaje enviado!");
+                    /* $("#suscribete").val("");
+                    $("#nombre").val("");
+                    $("#correo").val("");
+                    $("#telefono").val("");
+                    $("#proyecto").val(0);
+                    $("#mensaje").val(""); */
+                } else {
+                    console.log("Error mensaje");
+                    //toastr.warning("El mensaje no pudo enviarse.");
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                //toastr.error("El mensaje no se pudo enviar.");
+            });
 
         shownname.innerHTML = username.value;
         formnumber++;
